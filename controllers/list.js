@@ -2,7 +2,7 @@
  * @Author: Li yli2935@uwo.ca
  * @Date: 2022-11-03 10:39:58
  * @LastEditors: Li yli2935@uwo.ca
- * @LastEditTime: 2022-11-27 17:04:22
+ * @LastEditTime: 2022-11-28 16:50:03
  * @FilePath: /ece9065-yli2935-lab3/controllers/list.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -13,13 +13,21 @@ exports.createList = (req, res, next) => {
   console.log(list_name);
   const creator = req.body.creator;
   console.log(creator);
+  const description = req.body.description;
+  console.log(description);
+  const visibility = req.body.visibility;
+  console.log(visibility);
+
   const current = getCurrentDate();
-  console.log(current)
+  console.log(current);
   const list = new List({
     list_name: list_name,
     tracks_list: [],
-    creator:creator,
-    last_modify_date:current
+    creator: creator,
+    last_modify_date: current,
+    description: description ? description : "dont have any description",
+    visibility: visibility ? visibility : false,
+    review: [],
   });
 
   list
@@ -59,7 +67,6 @@ exports.deleteListByName = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-
 exports.getAllList = (req, res, next) => {
   List.find()
     .then((lists) => {
@@ -87,9 +94,9 @@ exports.getAllList = (req, res, next) => {
         result.push({
           list_name: list.list_name,
           num_tracks: list.tracks_list.length,
-          hour:hours,
-          minuits:minuits,
-          second:second
+          hour: hours,
+          minuits: minuits,
+          second: second,
         });
       });
       res.send(result);
@@ -97,25 +104,38 @@ exports.getAllList = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-
-const getCurrentDate = () =>{
-  // 获取当前日期
+const getCurrentDate = () => {
   var date = new Date();
-  // 获取当前月份
-  var nowMonth = date.getMonth() + 1; 
-  // 获取当前是几号
+  var nowMonth = date.getMonth() + 1;
   var strDate = date.getDate();
-  // 添加分隔符“-”
   var seperator = "-";
-  // 对月份进行处理，1-9月在前面添加一个“0”
   if (nowMonth >= 1 && nowMonth <= 9) {
     nowMonth = "0" + nowMonth;
   }
-  // 对月份进行处理，1-9号在前面添加一个“0”
   if (strDate >= 0 && strDate <= 9) {
     strDate = "0" + strDate;
   }
-  // 最后拼接字符串，得到一个格式为(yyyy-MM-dd)的日期
   var nowDate = date.getFullYear() + seperator + nowMonth + seperator + strDate;
   return nowDate;
-}
+};
+
+exports.addReviewToList = (req, res, next) => {
+  const listName = req.body.listName;
+  const review = req.body.review;
+  const userName = req.body.userName;
+  console.log(review)
+
+  List.findOne({ list_name: listName })
+    .then((list) => {
+      if (list == null || list.length === 0) {
+        res.send({ code: 400, msg: "list not exixt"});
+      } else {
+        list.review.push({username:userName,review:review});
+        return list.save().then((result) => {
+          console.log("UPDATED PRODUCT!");
+          res.send({ code: 200, msg: "success" });
+        });
+      }
+    })
+    .catch((err) => console.log(err));
+};

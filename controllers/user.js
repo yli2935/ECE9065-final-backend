@@ -2,7 +2,7 @@
  * @Author: Li yli2935@uwo.ca
  * @Date: 2022-11-20 13:26:59
  * @LastEditors: Li yli2935@uwo.ca
- * @LastEditTime: 2022-12-04 15:21:54
+ * @LastEditTime: 2022-12-06 16:36:36
  * @FilePath: /ECE9065-final-backend/controllers/user.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -33,7 +33,9 @@ exports.createAccount = async (req, res) => {
     const hashPassword = await bcrypt.hash(req.body.password, salt);
 
     User({
-      ...req.body,
+      firstName:req.body.firstName,
+      lastName:req.body.lastName,
+      email:req.body.email,
       password: hashPassword,
       status: USER_STATUS.WAITING_FOR_VERIFY,
       role: USER_ROLE.REGISTER,

@@ -2,7 +2,7 @@
  * @Author: Li yli2935@uwo.ca
  * @Date: 2022-11-03 10:39:58
  * @LastEditors: Li yli2935@uwo.ca
- * @LastEditTime: 2022-12-05 17:27:26
+ * @LastEditTime: 2022-12-06 16:01:33
  * @FilePath: /ece9065-yli2935-lab3/controllers/list.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -68,13 +68,7 @@ exports.deleteListByName = (req, res, next) => {
 };
 
 exports.getAllList = (req, res, next) => {
-
-
-
-
   const authHeader = req.headers.authorization;
-
-
   List.find()
     .then((lists) => {
       const result = [];
@@ -100,6 +94,7 @@ exports.getAllList = (req, res, next) => {
         console.log(hours + "-" + minuits + "-" + second);
 
         result.push({
+          track_list:list.tracks_list,
           list_name: list.list_name,
           num_tracks: list.tracks_list.length,
           hour: hours,
@@ -112,7 +107,7 @@ exports.getAllList = (req, res, next) => {
           description:list.description
         });
       });
-      res.send(result);
+      res.send({ code: 200, lists: result });
     })
     .catch((err) => console.log(err));
 };

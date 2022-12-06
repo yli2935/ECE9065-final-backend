@@ -2,7 +2,7 @@
  * @Author: Li yli2935@uwo.ca
  * @Date: 2022-11-03 10:39:58
  * @LastEditors: Li yli2935@uwo.ca
- * @LastEditTime: 2022-11-28 16:50:03
+ * @LastEditTime: 2022-12-05 17:27:26
  * @FilePath: /ece9065-yli2935-lab3/controllers/list.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -68,6 +68,13 @@ exports.deleteListByName = (req, res, next) => {
 };
 
 exports.getAllList = (req, res, next) => {
+
+
+
+
+  const authHeader = req.headers.authorization;
+
+
   List.find()
     .then((lists) => {
       const result = [];
@@ -76,6 +83,7 @@ exports.getAllList = (req, res, next) => {
       let second = 0;
 
       lists.map((list) => {
+        console.log(list)
         list.tracks_list.map((track) => {
           const durationArray = track.track_duration.split(":");
           second = second + parseInt(durationArray[1]);
@@ -97,6 +105,11 @@ exports.getAllList = (req, res, next) => {
           hour: hours,
           minuits: minuits,
           second: second,
+          last_modify_date:list.last_modify_date,
+          creator:list.creator,
+          review:list.review,
+          visibility:list.visibility,
+          description:list.description
         });
       });
       res.send(result);
@@ -130,7 +143,7 @@ exports.addReviewToList = (req, res, next) => {
       if (list == null || list.length === 0) {
         res.send({ code: 400, msg: "list not exixt"});
       } else {
-        list.review.push({username:userName,review:review});
+        list.review.push({username:userName,review:review,visibility:true});
         return list.save().then((result) => {
           console.log("UPDATED PRODUCT!");
           res.send({ code: 200, msg: "success" });

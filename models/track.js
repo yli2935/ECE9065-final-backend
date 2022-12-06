@@ -168,6 +168,11 @@ const tractSchema = new Schema({
     type: String,
     
   },
+  visibility:{
+    type:Boolean,
+    default:true
+  }
+
 });
 
 module.exports = mongoose.model("Tract", tractSchema);

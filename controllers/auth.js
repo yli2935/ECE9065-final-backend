@@ -2,7 +2,7 @@
  * @Author: Li yli2935@uwo.ca
  * @Date: 2022-11-20 15:06:36
  * @LastEditors: Li yli2935@uwo.ca
- * @LastEditTime: 2022-12-06 12:59:46
+ * @LastEditTime: 2022-12-08 11:44:59
  * @FilePath: /ECE9065-final-backend/controllers/auth.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -41,7 +41,7 @@ exports.login = async (req, res) => {
     }else{
       return res
       .status(200)
-      .send({ data: token, message: "Logged in successfully" });
+      .send({ data: token,userName: user.firstName,email: user.email,message: "Logged in successfully" });
     }
 
       

@@ -43,7 +43,7 @@ exports.getTrackByTitle = (req, res, next) => {
       const result = { length: resultList.length, data: resultList };
       res.send(result);
     })
-    .catch((err) => console.log(err));
+    .catch((err) => res.send({ code: 500, msg: err }));
 };
 
 exports.getTrackByAlbum = (req, res, next) => {
@@ -79,7 +79,7 @@ exports.getTrackByAlbum = (req, res, next) => {
     const result = { length: resultList.length, data: resultList };
     res.send(result);
   })
-  .catch((err) => console.log(err));
+  .catch((err) => res.send({ code: 500, msg: err }));
 
 }
 
@@ -117,7 +117,7 @@ exports.getTrackByArtist = (req, res, next) => {
     const result = { length: resultList.length, data: resultList };
     res.send(result);
   })
-  .catch((err) => console.log(err));
+  .catch((err) => res.send({ code: 500, msg: err }));
 
 }
 
@@ -151,7 +151,7 @@ exports.getTrackByID = (req, res, next) => {
       };
       res.send(result);
     })
-    .catch((err) => console.log(err));
+    .catch((err) => res.send({ code: 500, msg: err }));
 };
 
 exports.saveTrackToList = (req, res, next) => {
@@ -173,7 +173,7 @@ exports.saveTrackToList = (req, res, next) => {
       }
     })
 
-    .catch((err) => console.log(err));
+    .catch((err) => res.send({ code: 500, msg: err }));
 };
 
 exports.hidetrack = (req, res, next) => {
@@ -183,7 +183,7 @@ exports.hidetrack = (req, res, next) => {
     tracks.save().then((result) => {
       console.log(result)
       res.send({code:200,msg:'success'});
-    })
+    }).catch((err) => res.send({ code: 500, msg: err }));
     
   })
 }

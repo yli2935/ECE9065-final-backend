@@ -2,7 +2,7 @@
  * @Author: Li yli2935@uwo.ca
  * @Date: 2022-11-03 10:39:58
  * @LastEditors: Li yli2935@uwo.ca
- * @LastEditTime: 2022-12-07 22:47:29
+ * @LastEditTime: 2022-12-08 16:49:00
  * @FilePath: /ece9065-yli2935-lab3/controllers/list.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -136,7 +136,8 @@ exports.addReviewToList = (req, res, next) => {
 
   List.findOne({ list_name: listName })
     .then((list) => {
-      if (list == null || list.length === 0) {
+      console.log(list)
+      if (list === null || list.length === 0) {
         res.send({ code: 400, msg: "list not exixt"});
       } else {
         list.review.push({username:userName,review:review,visibility:true});

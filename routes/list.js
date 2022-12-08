@@ -2,7 +2,7 @@
  * @Author: Li yli2935@uwo.ca
  * @Date: 2022-11-27 17:00:29
  * @LastEditors: Li yli2935@uwo.ca
- * @LastEditTime: 2022-12-07 22:18:23
+ * @LastEditTime: 2022-12-07 22:51:07
  * @FilePath: /ECE9065-final-backend/routes/list.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -26,5 +26,6 @@ router.post('/addReview', listController.addReviewToList);
 router.post('/editList', listController.editList);
 // /lists/removeTrack => POST
 router.post('/removeTrack', listController.removeTrackFromList);
-
+// /lists/getListByUser => POST
+router.get('/getListByUser', listController.getListByUser);
 module.exports = router;

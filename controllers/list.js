@@ -2,7 +2,7 @@
  * @Author: Li yli2935@uwo.ca
  * @Date: 2022-11-03 10:39:58
  * @LastEditors: Li yli2935@uwo.ca
- * @LastEditTime: 2022-12-07 22:15:44
+ * @LastEditTime: 2022-12-07 22:47:29
  * @FilePath: /ece9065-yli2935-lab3/controllers/list.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -193,4 +193,13 @@ exports.removeTrackFromList = (req, res, next) => {
       }
     })
     .catch((err) => console.log(err));
+};
+
+exports.getListByUser = (req, res, next) => {
+  const userName = req.query.userName;
+  List.find({ creator: userName })
+    .then((list) => {
+      res.send({ code: 200, lists: list });
+    })
+    .catch((err) => res.send({ code: 500, msg: err}));
 };

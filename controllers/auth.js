@@ -2,7 +2,7 @@
  * @Author: Li yli2935@uwo.ca
  * @Date: 2022-11-20 15:06:36
  * @LastEditors: Li yli2935@uwo.ca
- * @LastEditTime: 2022-12-09 11:11:38
+ * @LastEditTime: 2022-12-09 16:06:49
  * @FilePath: /ECE9065-final-backend/controllers/auth.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -34,14 +34,18 @@ exports.login = async (req, res) => {
     const token = user.generateAuthToken();
     console.log(token)
     if(user.status === USER_STATUS.WAITING_FOR_VERIFY){
-      console.log(USER_STATUS.WAITING_FOR_VERIFY,user.status)
       return res
       .status(200)
-      .send({ message: "please verify your account" });
-    }else{
+      .send({ code:201,message: "please verify your account" });
+    } else if(user.status === USER_STATUS.NOT_ALLOW){
+      return res
+      .status(400)
+      .send({ code:400,message: "your account is banned by admin,please connect admin to solve this problem" });
+    }
+    else{
       return res
       .status(200)
-      .send({ data: token,userName: user.firstName,email: user.email,message: "Logged in successfully" });
+      .send({ code:200,data: token,userName: user.firstName,email: user.email,message: "Logged in successfully" });
     }
 
       

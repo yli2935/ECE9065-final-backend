@@ -2,12 +2,14 @@
  * @Author: Li yli2935@uwo.ca
  * @Date: 2022-11-20 13:26:59
  * @LastEditors: Li yli2935@uwo.ca
- * @LastEditTime: 2022-12-09 15:55:27
+ * @LastEditTime: 2022-12-09 17:43:34
  * @FilePath: /ECE9065-final-backend/controllers/user.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 const { User, validate } = require("../models/User");
 const bcrypt = require("bcrypt");
+const Joi = require("joi");
+const passwordComplexity = require("joi-password-complexity");
 const {
   USER_STATUS,
   USER_ROLE,
@@ -33,9 +35,9 @@ exports.createAccount = async (req, res) => {
     const hashPassword = await bcrypt.hash(req.body.password, salt);
 
     User({
-      firstName:req.body.firstName,
-      lastName:req.body.lastName,
-      email:req.body.email,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email,
       password: hashPassword,
       status: USER_STATUS.WAITING_FOR_VERIFY,
       role: USER_ROLE.REGISTER,
@@ -91,8 +93,41 @@ exports.verifyAccount = async (req, res) => {
     ).then((user) => {
       res.status(201).send({ message: "verify success" });
     });
-    
   });
-
 };
 
+exports.changePassword = async (req, res) => {
+  const { error } = ChangePasswordValidate(req.body);
+  if (error) return res.status(400).send({ message: error.details[0].message });
+  const user = await User.findOne({ email: req.body.email });
+  if (!user) return res.status(401).send({ message: "Email not Exist" });
+  const validPassword = await bcrypt.compare(
+    req.body.old_password,
+    user.password
+  );
+  if (!validPassword)
+    return res.status(401).send({ message: "Invalid Email or Password" });
+
+  const salt = await bcrypt.genSalt(Number(process.env.SALT));
+
+  const hashPassword = await bcrypt.hash(req.body.new_password, salt);
+  User.updateOne(
+    { email: req.body.email },
+    { password: hashPassword}
+  )
+    .then((result) => {
+      res.send({ code: 200, msg: "update password success" });
+    })
+    .catch((err) => {
+      res.send({ code: 500, msg: err });
+    });
+};
+
+const ChangePasswordValidate = (data) => {
+  const schema = Joi.object({
+    email: Joi.string().email().required().label("Email"),
+    new_password: passwordComplexity().required().label("Password"),
+    old_password: Joi.string().required().label("Password"),
+  });
+  return schema.validate(data);
+};

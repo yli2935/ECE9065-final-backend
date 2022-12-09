@@ -93,20 +93,22 @@ exports.getAllList = (req, res, next) => {
           }
         });
         console.log(hours + "-" + minuits + "-" + second);
+        if(list.visibility === true){
+          result.push({
+            track_list:list.tracks_list,
+            list_name: list.list_name,
+            num_tracks: list.tracks_list.length,
+            hour: hours,
+            minuits: minuits,
+            second: second,
+            last_modify_date:list.last_modify_date,
+            creator:list.creator,
+            review:list.review,
+            visibility:list.visibility,
+            description:list.description
+          });
+        }
 
-        result.push({
-          track_list:list.tracks_list,
-          list_name: list.list_name,
-          num_tracks: list.tracks_list.length,
-          hour: hours,
-          minuits: minuits,
-          second: second,
-          last_modify_date:list.last_modify_date,
-          creator:list.creator,
-          review:list.review,
-          visibility:list.visibility,
-          description:list.description
-        });
       });
       res.send({ code: 200, lists: result });
     })

@@ -2,7 +2,7 @@
  * @Author: Li yli2935@uwo.ca
  * @Date: 2022-11-20 13:12:37
  * @LastEditors: Li yli2935@uwo.ca
- * @LastEditTime: 2022-11-26 17:19:10
+ * @LastEditTime: 2022-12-09 10:59:47
  * @FilePath: /ECE9065-final-backend/models/User.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -17,11 +17,9 @@ const userSchema = new Schema({
   firstName: {
     type: String,
     required: true,
-    required: true,
   },
   lastName: {
     type: String,
-    required: true,
     required: true,
   },
   email: {
@@ -33,7 +31,7 @@ const userSchema = new Schema({
   password: {
     type: String,
     required: true,
-    required: true,
+
   },
   role: {
     type: Number,

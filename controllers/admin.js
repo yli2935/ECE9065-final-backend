@@ -2,7 +2,7 @@
  * @Author: Li yli2935@uwo.ca
  * @Date: 2022-11-26 14:14:43
  * @LastEditors: Li yli2935@uwo.ca
- * @LastEditTime: 2022-12-05 15:16:31
+ * @LastEditTime: 2022-12-09 09:54:43
  * @FilePath: /ECE9065-final-backend/controllers/admin.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -10,6 +10,7 @@
 const {USER_STATUS,USER_ROLE} = require("../config/config");
 const { User } = require("../models/User");
 const Track = require("../models/track");
+const List = require("../models/list");
 
 exports.disableUser = async (req, res, next) => {
   const { email } = req.params;
@@ -45,13 +46,29 @@ exports.getUserList = async (req, res, next) => {
 }
 
 exports.setTrackDisable = (req, res, next) => {
-  
-  Track.findOne({ _id: user._id}).then((tracks) => {
+  const track_id = req.body.trackID;
+  Track.findOne({ _id: track_id}).then((tracks) => {
     tracks.visibility = false;
     tracks.save().then((result) => {
       console.log(result)
       res.send({code:200,msg:'success'});
-    })
+    }).catch((err) => res.send({ code: 500, msg: err }));
     
-  })
+  }).catch((err) => res.send({ code: 500, msg: err }));
+}
+
+exports.getAllReview = (req, res, next) => {
+  
+  List.find().then((lists) => {
+    const result = [];
+    lists.map((list)=>{
+      const listItem = {}
+      listItem.list_name = list.list_name
+      listItem.review_list = list.review
+      result.push(listItem);
+    })
+    res.send({code:200,reviews:result});
+
+    
+  }).catch((err) => res.send({ code: 500, msg: err }));
 }

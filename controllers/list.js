@@ -2,7 +2,7 @@
  * @Author: Li yli2935@uwo.ca
  * @Date: 2022-11-03 10:39:58
  * @LastEditors: Li yli2935@uwo.ca
- * @LastEditTime: 2022-12-08 16:49:00
+ * @LastEditTime: 2022-12-12 17:55:39
  * @FilePath: /ece9065-yli2935-lab3/controllers/list.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -71,13 +71,15 @@ exports.getAllList = (req, res, next) => {
   const authHeader = req.headers.authorization;
   
   List.find()
+    .limit(10)
     .then((lists) => {
       const result = [];
-      let hours = 0;
-      let minuits = 0;
-      let second = 0;
+
 
       lists.map((list) => {
+        let hours = 0;
+        let minuits = 0;
+        let second = 0;
         console.log(list)
         list.tracks_list.map((track) => {
           const durationArray = track.track_duration.split(":");
@@ -95,6 +97,7 @@ exports.getAllList = (req, res, next) => {
         console.log(hours + "-" + minuits + "-" + second);
         if(list.visibility === true){
           result.push({
+            list_id:list._id,
             track_list:list.tracks_list,
             list_name: list.list_name,
             num_tracks: list.tracks_list.length,
